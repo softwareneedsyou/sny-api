@@ -1,12 +1,18 @@
-'use strict'; const config = require('./config')
+'use strict';
+const bodyParser = require('body-parser')
+const config = require('./config')
 const port = config.express.port
 
 const express = require('express')
 
 const app = express()
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 var routers = {
-    ping: { route: '/ping' },
+    ping:  { route: '/ping' },
+    users: { route: '/users' },
+    plugins: { route: '/plugins' },
 }
 
 Object.keys(routers).map(router => {
