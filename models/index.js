@@ -3,6 +3,7 @@ const sequelize = require('./sequelize').sequelize
 
 const models = {
     User: require('./User')(sequelize),
+    Plugin: require('./Plugin')(sequelize),
 }
 
 sequelize.sync()

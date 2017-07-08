@@ -78,25 +78,31 @@ module.exports = function(router) {
                 lastname: req.body.lastname,
                 email: req.body.email,
             }).then(user => {
-                res.send(user)
+                res.send({ user })
             })
                 .catch(error => {
                     res.status(500).send({ error })
                 })
         })
 
-/**
- * @api {delete} /user/:user_id DeleterUser
- * @apiGroup Users
- *
- * @apiParam {number} user_id
- *
- * @apiSuccess {Object}
- */
-    .delete('/:user_id', (req, res) => {
-        User.findById(req.params.user_id)
-            .then(user => res.send({ user }))
-            .catch(error => res.status(500).send({ error }))
-            .catch(error => res.status(500).send({ error }))
-    })
+    /**
+     * @api {delete} /user/:user_id DeleterUser
+     * @apiGroup Users
+     *
+     * @apiParam {number} user_id
+     *
+     * @apiSuccess {Object} user
+     * @apiSuccess {Number} user.id
+     * @apiSuccess {String} user.firstname
+     * @apiSuccess {String} user.lastname
+     * @apiSuccess {String} user.username
+     * @apiSuccess {String} user.email
+     * @apiSuccess {Date} user.createdAt
+     * @apiSuccess {Date} user.updatedAt
+     */
+        .delete('/:user_id', (req, res) => {
+            User.findById(req.params.user_id)
+                .then(user => res.send({ user }))
+                .catch(error => res.status(500).send({ error }))
+        })
 }
