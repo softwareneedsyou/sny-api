@@ -58,7 +58,7 @@ module.exports = function(router){
      */
         .post('/', (req, res, next) => {
             Chapter.create({
-                title: req.body.title,
+                name: req.body.name,
                 description: req.body.description,
             })
                 .then(chapter => {

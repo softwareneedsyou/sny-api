@@ -6,4 +6,5 @@ module.exports = function(routers) {
     require('./plugins')(routers.plugins.router)
     require('./chapters')(routers.chapters.router)
     require('./pluginTypes')(routers.pluginTypes.router)
+    require('./stories')(routers.stories.router)
 }

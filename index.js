@@ -10,11 +10,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 var routers = {
-    ping:  { route: '/ping' },
-    users: { route: '/users' },
-    plugins: { route: '/plugins' },
-    chapters: { route: '/chapters' },
+    ping:        { route: '/ping' },
+    users:       { route: '/users' },
+    plugins:     { route: '/plugins' },
+    chapters:    { route: '/chapters' },
     pluginTypes: { route: '/pluginTypes' },
+    stories:     { route: '/stories' },
 }
 
 Object.keys(routers).map(router => {
