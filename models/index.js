@@ -1,10 +1,18 @@
 'use strict'
 const sequelize = require('./sequelize').sequelize
 
+const User       = require('./User')(sequelize)
+const Plugin     = require('./Plugin')(sequelize)
+const PluginType = require('./PluginType')(sequelize)
+const Chapter    = require('./Chapter')(sequelize)
+
+Plugin.belongsTo(PluginType)
+
 const models = {
-    User: require('./User')(sequelize),
-    Plugin: require('./Plugin')(sequelize),
-    Chapter: require('./Chapter')(sequelize),
+    User,
+    Plugin,
+    Chapter,
+    PluginType,
 }
 
 sequelize.sync()

@@ -14,6 +14,7 @@ var routers = {
     users: { route: '/users' },
     plugins: { route: '/plugins' },
     chapters: { route: '/chapters' },
+    pluginTypes: { route: '/pluginTypes' },
 }
 
 Object.keys(routers).map(router => {

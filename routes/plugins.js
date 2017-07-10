@@ -1,12 +1,13 @@
 'use strict';
-const models = require('../models');
-const Plugin = models.Plugin
+const models     = require('../models');
+const Plugin     = models.Plugin
+const PluginType = models.PluginType
 
 module.exports = function(router){
     router
     /**
      * @api {get} /plugins/ GetPlugins
-     * @apiGroup Plugin
+     * @apiGroup Plugins
      *
      * @apiSuccess {Object[]} plugins A list of all the plugins available
      * @apiSuccess {String} plugins.name
@@ -26,7 +27,7 @@ module.exports = function(router){
 
     /**
      * @api {get} /plugins/:plugin_id GetPlugin
-     * @apiGroup Plugin
+     * @apiGroup Plugins
      *
      * @apiSuccess {Object} plugin
      * @apiSuccess {String} plugin.name
@@ -45,10 +46,11 @@ module.exports = function(router){
 
     /**
      * @api {post} /plugins/ PostPlugin
-     * @apiGroup Plugin
+     * @apiGroup Plugins
      *
      * @apiParam {String} plugin.name
      * @apiParam {String} plugin.description
+     * @apiParam {Number} plugin.pluginTypeId
      *
      * @apiSuccess {Object} plugin
      * @apiSuccess {String} plugin.name
@@ -58,19 +60,22 @@ module.exports = function(router){
      * @apiError PluginAlreadyExists
      */
         .post('/', (req, res, next) => {
-            Plugin.create({
-                title: req.body.title,
-                description: req.body.description,
+            Promise.all([
+                Plugin.create({
+                    name: req.body.name,
+                    description: req.body.description,
+                }),
+                PluginType.findById(req.body.pluginTypeId)
+            ]).then(([plugin, pluginType]) => {
+                plugin.setPluginType(pluginType)
+                res.send({ plugin })
+            }).catch(error => {
+                res.status(500).send({ error })
             })
-                .then(plugin => {
-                    res.send({ plugin })
-                }).catch(error => {
-                    res.status(500).send({ error })
-                })
         })
 
     /**
-     * @api {delete} /plugins/:plugin_id DeleterUser
+     * @api {delete} /plugins/:plugin_id DeletePlugin
      * @apiGroup Plugins
      *
      * @apiParam {number} plugin_id
