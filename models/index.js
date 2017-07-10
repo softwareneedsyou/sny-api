@@ -6,9 +6,12 @@ const Plugin     = require('./Plugin')(sequelize)
 const PluginType = require('./PluginType')(sequelize)
 const Chapter    = require('./Chapter')(sequelize)
 const Story      = require('./Story')(sequelize)
+const Score      = require('./Score')(sequelize)
 
 Plugin.belongsTo(PluginType)
 Chapter.hasMany(Story)
+User.belongsToMany(Chapter, { through: Score })
+Chapter.belongsToMany(User, { through: Score })
 
 const models = {
     User,
@@ -16,6 +19,7 @@ const models = {
     Chapter,
     PluginType,
     Story,
+    Score,
 }
 
 sequelize.sync()

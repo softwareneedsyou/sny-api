@@ -1,6 +1,8 @@
 'use strict'
-const models = require('../models')
-const User = models.User
+const models  = require('../models')
+const User    = models.User
+const Chapter = models.Chapter
+const Score   = models.Score
 
 module.exports = function(router) {
     router
@@ -52,7 +54,7 @@ module.exports = function(router) {
         })
 
     /**
-     * @api {post} /user/ PostUser
+     * @api {post} /users/ PostUser
      * @apiGroup Users
      *
      * @apiParam {String} user.firstname
@@ -81,6 +83,41 @@ module.exports = function(router) {
                 res.send({ user })
             })
                 .catch(error => {
+                    res.status(500).send({ error })
+                })
+        })
+
+    /**
+     * @api {post} /users/:user_id/chapters/:chapter_id
+     * @apiGroup Users
+     *
+     * @apiParam {Number} user_id
+     * @apiParam {Number} chapter_id
+     * @apiParam {Number} score
+     *
+     * @apiSuccess {Object} user
+     * @apiSuccess {Number} user.id
+     * @apiSuccess {String} user.firstname
+     * @apiSuccess {String} user.lastname
+     * @apiSuccess {String} user.username
+     * @apiSuccess {String} user.email
+     * @apiSuccess {Date} user.createdAt
+     * @apiSuccess {Date} user.updatedAt
+     *
+     * @apiExample {http} Example usage:
+     *     http POST http://localhost:3000/users/321/chapters/32 score=123
+     */
+        .post('/:user_id/chapters/:chapter_id', (req, res, next) => {
+            Promise.all([
+                User.findById(req.params.user_id),
+                Chapter.findById(req.params.chapter_id)
+            ])
+                .then(([user, chapter]) => {
+                    user.addChapter(chapter, { through: { score: req.body.score } })
+                    res.send({ user })
+                })
+                .catch(error => {
+                    console.log({ error })
                     res.status(500).send({ error })
                 })
         })
