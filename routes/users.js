@@ -86,7 +86,7 @@ module.exports = function(router) {
         })
 
     /**
-     * @api {delete} /user/:user_id DeleterUser
+     * @api {delete} /user/:user_id DeleteUser
      * @apiGroup Users
      *
      * @apiParam {number} user_id

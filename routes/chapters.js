@@ -6,7 +6,7 @@ module.exports = function(router){
     router
     /**
      * @api {get} /chapters/ GetChapters
-     * @apiGroup Chapter
+     * @apiGroup Chapters
      *
      * @apiSuccess {Object[]} chapters A list of all the chapters available
      * @apiSuccess {String} chapters.name
@@ -25,7 +25,7 @@ module.exports = function(router){
 
     /**
      * @api {get} /chapters/:chapter_id GetChapter
-     * @apiGroup Chapter
+     * @apiGroup Chapters
      *
      * @apiSuccess {Object} chapter
      * @apiSuccess {String} chapter.name
@@ -44,7 +44,7 @@ module.exports = function(router){
 
     /**
      * @api {post} /chapters/ PostChapter
-     * @apiGroup Chapter
+     * @apiGroup Chapters
      *
      * @apiParam {String} chapter.name
      * @apiParam {String} chapter.description
@@ -69,7 +69,7 @@ module.exports = function(router){
         })
 
     /**
-     * @api {delete} /chapters/:chapter_id DeleterUser
+     * @api {delete} /chapters/:chapter_id DeleteChapter
      * @apiGroup Chapters
      *
      * @apiParam {number} chapter_id
