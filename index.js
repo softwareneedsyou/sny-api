@@ -13,6 +13,7 @@ var routers = {
     ping:  { route: '/ping' },
     users: { route: '/users' },
     plugins: { route: '/plugins' },
+    chapters: { route: '/chapters' },
 }
 
 Object.keys(routers).map(router => {
