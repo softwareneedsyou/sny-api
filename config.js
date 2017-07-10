@@ -6,7 +6,7 @@ var config = {
 
 // MySQL
 config.mysql.dev_url       = '127.0.0.1'
-config.mysql.docker_url    = '172.17.0.2'
+config.mysql.docker_url    = '172.21.0.2'
 config.mysql.database      = 'sny'
 config.mysql.prod_url      = ''
 config.mysql.root          = 'root'
