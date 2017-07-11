@@ -5,7 +5,7 @@ const config = require(path.dirname(require.main.filename) + '/config')
 
 module.exports = {
     sequelize: new Sequelize(config.mysql.database, config.mysql.user, config.mysql.user_password, {
-        host: config.mysql.docker_url,
+        host: config.mysql.dev_url,
         dialect: 'mysql'
     })
 }
