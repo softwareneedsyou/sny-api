@@ -81,9 +81,35 @@ module.exports = function(router){
      * @apiSuccess {Date} pluginType.created_at
      */
         .delete('/:pluginType_id', (req, res) => {
-            pluginType.findById(req.params.pluginType_id)
+            pluginType.destroy(
+              {where : {id : req.params.pluginType_id}}
+            )
                 .then(pluginType => res.send({ pluginType }))
                 .catch(error => res.status(500).send({ error }))
         })
+
+
+      /**
+       * @api {put} /user/:user_id DeleteUser
+       * @apiGroup Users
+       *
+       * @apiParam {number} user_id
+       *
+       * @apiSuccess {Object} chapter
+       * @apiSuccess {String} chapter.name
+       * @apiSuccess {String} chapter.description
+       */
+          .put('/:pluginType_id', (req, res) => {
+            pluginType.update(
+              { name : req.body.name,
+                description : req.body.description},
+              { where : {id : req.params.pluginType_id} }
+            )
+            .then(chapter => {
+                    res.send({ chapter })
+                }).catch(error => {
+                    res.status(500).send({ error })
+                })
+          })
 
 }
