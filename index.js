@@ -8,11 +8,21 @@ const express = require('express')
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 var routers = {
-    ping:  { route: '/ping' },
-    users: { route: '/users' },
-    plugins: { route: '/plugins' },
+    ping:        { route: '/ping' },
+    users:       { route: '/users' },
+    plugins:     { route: '/plugins' },
+    chapters:    { route: '/chapters' },
+    pluginTypes: { route: '/pluginTypes' },
+    stories:     { route: '/stories' },
 }
 
 Object.keys(routers).map(router => {

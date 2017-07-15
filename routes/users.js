@@ -1,12 +1,14 @@
 'use strict'
-const models = require('../models')
-const User = models.User
+const models  = require('../models')
+const User    = models.User
+const Chapter = models.Chapter
+const Score   = models.Score
 
 module.exports = function(router) {
     router
     /**
      * @api {get} /user/ GetUsers
-     * @apiGroup Users 
+     * @apiGroup Users
      *
      * @apiSuccess {Object[]} users A object with list of all the users
      * @apiSuccess {Number} users.id
@@ -14,6 +16,7 @@ module.exports = function(router) {
      * @apiSuccess {String} users.lastname
      * @apiSuccess {String} users.username
      * @apiSuccess {String} users.email
+     * @apiSuccess {Boolean} users.admin
      * @apiSuccess {Date} users.createdAt
      */
         .get('/', (req, res) => {
@@ -28,7 +31,7 @@ module.exports = function(router) {
 
     /**
      * @api {get} /user/:user_id GetUser
-     * @apiGroup Users 
+     * @apiGroup Users
      *
      * @apiParam {number} id The unique user id
      *
@@ -38,6 +41,7 @@ module.exports = function(router) {
      * @apiSuccess {String} user.lastname
      * @apiSuccess {String} user.username
      * @apiSuccess {String} user.email
+     * @apiSuccess {Boolean} users.admin
      * @apiSuccess {Date} user.createdAt
      * @apiSuccess {Date} user.updatedAt
      */
@@ -52,7 +56,7 @@ module.exports = function(router) {
         })
 
     /**
-     * @api {post} /user/ PostUser
+     * @api {post} /users/ PostUser
      * @apiGroup Users
      *
      * @apiParam {String} user.firstname
@@ -66,6 +70,7 @@ module.exports = function(router) {
      * @apiSuccess {String} user.lastname
      * @apiSuccess {String} user.username
      * @apiSuccess {String} user.email
+     * @apiSuccess {Boolean} users.admin
      * @apiSuccess {Date} user.createdAt
      * @apiSuccess {Date} user.updatedAt
      *
@@ -77,6 +82,7 @@ module.exports = function(router) {
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 email: req.body.email,
+                admin: req.body.admin,
             }).then(user => {
                 res.send({ user })
             })
@@ -86,7 +92,43 @@ module.exports = function(router) {
         })
 
     /**
-     * @api {delete} /user/:user_id DeleterUser
+     * @api {post} /users/:user_id/chapters/:chapter_id
+     * @apiGroup Users
+     *
+     * @apiParam {Number} user_id
+     * @apiParam {Number} chapter_id
+     * @apiParam {Number} score
+     *
+     * @apiSuccess {Object} user
+     * @apiSuccess {Number} user.id
+     * @apiSuccess {String} user.firstname
+     * @apiSuccess {String} user.lastname
+     * @apiSuccess {String} user.username
+     * @apiSuccess {String} user.email
+     * @apiSuccess {Boolean} users.admin
+     * @apiSuccess {Date} user.createdAt
+     * @apiSuccess {Date} user.updatedAt
+     *
+     * @apiExample {http} Example usage:
+     *     http POST http://localhost:3000/users/321/chapters/32 score=123
+     */
+        .post('/:user_id/chapters/:chapter_id', (req, res, next) => {
+            Promise.all([
+                User.findById(req.params.user_id),
+                Chapter.findById(req.params.chapter_id)
+            ])
+                .then(([user, chapter]) => {
+                    user.addChapter(chapter, { through: { score: req.body.score } })
+                    res.send({ user })
+                })
+                .catch(error => {
+                    console.log({ error })
+                    res.status(500).send({ error })
+                })
+        })
+
+    /**
+     * @api {delete} /user/:user_id DeleteUser
      * @apiGroup Users
      *
      * @apiParam {number} user_id
@@ -97,12 +139,46 @@ module.exports = function(router) {
      * @apiSuccess {String} user.lastname
      * @apiSuccess {String} user.username
      * @apiSuccess {String} user.email
+     * @apiSuccess {Boolean} users.admin
      * @apiSuccess {Date} user.createdAt
      * @apiSuccess {Date} user.updatedAt
      */
         .delete('/:user_id', (req, res) => {
-            User.findById(req.params.user_id)
-                .then(user => res.send({ user }))
-                .catch(error => res.status(500).send({ error }))
+            User.destroy(
+              {where : {id : req.params.user_id}}
+            )
+            .then(user => res.send({ user }))
+            .catch(error => res.status(500).send({ error }))
+        })
+
+      /**
+       * @api {put} /user/:user_id DeleteUser
+       * @apiGroup Users
+       *
+       * @apiParam {number} user_id
+       *
+       * @apiSuccess {Object} user
+       * @apiSuccess {String} user.firstname
+       * @apiSuccess {String} user.lastname
+       * @apiSuccess {String} user.username
+       * @apiSuccess {String} user.email
+       * @apiSuccess {Boolean} users.admin
+       * @apiSuccess {Date} user.createdAt
+       * @apiSuccess {Date} user.updatedAt
+       */
+        .put('/:user_id', (req, res) => {
+          User.update(
+            { username : req.body.username,
+              firstname : req.body.firstname,
+              lastname : req.body.lastname,
+              email : req.body.email,
+              admin : req.body.admin},
+            { where : {id : req.params.user_id} }
+          )
+          .then(user => {
+                  res.send({ user })
+              }).catch(error => {
+                  res.status(500).send({ error })
+              })
         })
 }
