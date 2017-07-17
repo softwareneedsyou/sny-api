@@ -71,6 +71,7 @@ module.exports = function(router){
                     chapter.setStories(story)
                     res.send({ story })
                 }).catch(error => {
+                    console.log(" "  + error);
                     res.status(500).send({ error })
                 })
         })
@@ -87,9 +88,11 @@ module.exports = function(router){
      * @apiSuccess {Date} story.created_at
      */
         .delete('/:story_id', (req, res) => {
-            Story.findById(req.params.story_id)
-                .then(story => res.send({ story }))
-                .catch(error => res.status(500).send({ error }))
+            Story.destroy(
+              {where : {id : req.params.story_id}}
+            )
+            .then(story => res.send({ story }))
+            .catch(error => res.status(500).send({ error }))
         })
 
 }
