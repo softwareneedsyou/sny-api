@@ -66,12 +66,14 @@ module.exports = function(router){
                     description: req.body.description,
                 }),
                 PluginType.findById(req.body.pluginTypeId)
-            ]).then(([plugin, pluginType]) => {
-                plugin.setPluginType(pluginType)
-                res.send({ plugin })
-            }).catch(error => {
-                res.status(500).send({ error })
-            })
+            ])
+                .then(([plugin, pluginType]) => {
+                    plugin.setPluginType(pluginType)
+                    res.send({ plugin })
+                }).catch(error => {
+                  console.error();
+                    res.status(500).send({ error })
+                })
         })
 
     /**
@@ -86,9 +88,11 @@ module.exports = function(router){
      * @apiSuccess {Date} plugin.created_at
      */
         .delete('/:plugin_id', (req, res) => {
-            Plugin.findById(req.params.plugin_id)
-                .then(plugin => res.send({ plugin }))
-                .catch(error => res.status(500).send({ error }))
+            Plugin.destroy(
+              {where : {id : req.params.plugin_id}}
+            )
+            .then(plugin => res.send({ plugin }))
+            .catch(error => res.status(500).send({ error }))
         })
 
 }
