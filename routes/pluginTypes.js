@@ -81,11 +81,14 @@ module.exports = function(router){
      * @apiSuccess {Date} pluginType.created_at
      */
         .delete('/:pluginType_id', (req, res) => {
-            pluginType.destroy(
-              {where : {id : req.params.pluginType_id}}
-            )
+            PluginType.findById(req.params.pluginType_id)
+            .then(pluginType => {
+                pluginType.destroy()
                 .then(pluginType => res.send({ pluginType }))
                 .catch(error => res.status(500).send({ error }))
+            }).catch(error => {
+                res.status(404).send({ error })
+            })
         })
 
 
@@ -100,16 +103,22 @@ module.exports = function(router){
        * @apiSuccess {String} chapter.description
        */
           .put('/:pluginType_id', (req, res) => {
-            pluginType.update(
-              { name : req.body.name,
-                description : req.body.description},
-              { where : {id : req.params.pluginType_id} }
-            )
-            .then(chapter => {
+            PluginType.findById(res.params.pluginType)
+            .then(pluginType => {
+                pluginType.update(
+                  { name : req.body.name,
+                    description : req.body.description},
+                  { where : {id : req.params.pluginType_id} }
+                )
+                .then(chapter => {
                     res.send({ chapter })
                 }).catch(error => {
                     res.status(500).send({ error })
                 })
+            }).catch(error => {
+                res.status(404).send({ error })
+            })
+
           })
 
 }

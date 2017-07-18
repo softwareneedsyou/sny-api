@@ -144,11 +144,14 @@ module.exports = function(router) {
      * @apiSuccess {Date} user.updatedAt
      */
         .delete('/:user_id', (req, res) => {
-            User.destroy(
-              {where : {id : req.params.user_id}}
-            )
-            .then(user => res.send({ user }))
-            .catch(error => res.status(500).send({ error }))
+            User.findById(req.params.user_id)
+            .then(user => {
+                user.destroy()
+                .then(user => res.send({ user }))
+                .catch(error => res.status(500).send({ error }))
+            }).catch(error => {
+                res.status(404).send({ error })
+            })
         })
 
       /**
@@ -167,18 +170,23 @@ module.exports = function(router) {
        * @apiSuccess {Date} user.updatedAt
        */
         .put('/:user_id', (req, res) => {
-          User.update(
-            { username : req.body.username,
-              firstname : req.body.firstname,
-              lastname : req.body.lastname,
-              email : req.body.email,
-              admin : req.body.admin},
-            { where : {id : req.params.user_id} }
-          )
-          .then(user => {
-                  res.send({ user })
-              }).catch(error => {
-                  res.status(500).send({ error })
-              })
+            User.findById(req.params.user_id)
+            .then(user => {
+                user.update(
+                  { username : req.body.username,
+                    firstname : req.body.firstname,
+                    lastname : req.body.lastname,
+                    email : req.body.email,
+                    admin : req.body.admin},
+                  { where : {id : req.params.user_id} }
+                )
+                .then(user => {
+                    res.send({ user })
+                }).catch(error => {
+                    res.status(500).send({ error })
+                })
+            }).catch(error => {
+                res.status(404).send({ error })
+            })
         })
 }

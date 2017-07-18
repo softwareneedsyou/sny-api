@@ -89,15 +89,28 @@ module.exports = function(router){
      * @apiSuccess {Date} story.created_at
      */
         .delete('/:story_id', (req, res) => {
-            Story.destroy(
-              {where : {id : req.params.story_id}}
-            )
-            .then(story => res.send({ story }))
-            .catch(error => res.status(500).send({ error }))
+          Story.findById(req.params.story_id)
+          .then(story => {
+              story.destroy()
+              .then(story => res.send({ story }))
+              .catch(error => res.status(500).send({ error }))
+          }).catch(error => {
+              res.status(404).send({ error })
+          })
         })
 
 
-
+      /**
+       * @api {put} /stories/:story_id UpdateStory
+       * @apiGroup Stories
+       *
+       * @apiParam {number} story_id
+       *
+       * @apiSuccess {Object} story
+       * @apiSuccess {String} story.name
+       * @apiSuccess {String} story.description
+       * @apiSuccess {Date} story.created_at
+       */
         .put('/:story_id', (req, res) => {
             Promise.all([
                 Story.findById(req.params.story_id),
@@ -108,12 +121,14 @@ module.exports = function(router){
                   name: req.body.name,
                   description: req.body.description,
                   compilator: req.body.compilator,
+                }).then(story => {
+                  chapter.setStories(story)
+                  res.send({ chapter })
+                }).catch(error => {
+                  res.status(500).send({ error })
                 })
-                chapter.setStories(story)
-                res.send({ chapter })
             }).catch(error => {
-                console.log(" "  + error);
-                res.status(500).send({ error })
+                res.status(404).send({ error })
             })
         })
 
