@@ -95,4 +95,23 @@ module.exports = function(router){
             .catch(error => res.status(500).send({ error }))
         })
 
+
+        .put('/:plugin_id', (req, res) => {
+            Promise.all([
+                Plugin.findById(req.params.plugin_id),
+                PluginType.findById(req.body.pluginTypeId),
+            ])
+            .then(([plugin, pluginType]) => {
+                plugin.update({
+                  name: req.body.name,
+                  description: req.body.description,
+                })
+                plugin.setPluginType(pluginType)
+                res.send({ plugin })
+            }).catch(error => {
+              console.error();
+                res.status(500).send({ error })
+            })
+        })
+
 }
