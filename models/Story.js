@@ -6,7 +6,6 @@ module.exports = function(sequelize, DataTypes) {
         name: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,20],
             },
@@ -14,20 +13,18 @@ module.exports = function(sequelize, DataTypes) {
         description: {
             type: Sequelize.TEXT,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,255],
             },
         },
         compilator: {
-            type: Sequelise.INTEGER,
+            type: Sequelize.INTEGER,
             validate: {
-              notNull: true,
               notEmpty: true,
               isNumeric: true,
               isInt: true,
               min: 1,
             },
-        }
+        },
     })
 }

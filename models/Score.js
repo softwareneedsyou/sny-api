@@ -6,7 +6,6 @@ module.exports = function(sequelize) {
         score: {
             type: Sequelize.INTEGER,
             validate: {
-              notNull: true,
               notEmpty: true,
               isNumeric: true,
               isInt: true,
