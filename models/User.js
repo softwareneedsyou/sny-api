@@ -6,7 +6,6 @@ module.exports = function(sequelize) {
         firstname: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,20],
               isAlpha: true,
@@ -15,7 +14,6 @@ module.exports = function(sequelize) {
         lastname: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,20],
               isAlpha: true,
@@ -24,7 +22,6 @@ module.exports = function(sequelize) {
         username: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,20],
             },
@@ -32,7 +29,6 @@ module.exports = function(sequelize) {
         email: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
               isEmail: true,
             },
@@ -40,14 +36,12 @@ module.exports = function(sequelize) {
         password: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
             },
         },
         admin: {
             type: Sequelize.BOOLEAN,
             validate: {
-              notNull: true,
               notEmpty: true,
               isNumeric: true,
               isInt: true,

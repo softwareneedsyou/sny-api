@@ -6,7 +6,6 @@ module.exports = function(sequelize) {
         name: {
             type: Sequelize.STRING,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,20],
             },
@@ -14,7 +13,6 @@ module.exports = function(sequelize) {
         description: {
             type: Sequelize.TEXT,
             validate: {
-              notNull: true,
               notEmpty: true,
               len: [3,255],
             },
