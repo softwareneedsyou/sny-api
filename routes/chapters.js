@@ -80,11 +80,14 @@ module.exports = function(router){
      * @apiSuccess {Date} chapter.created_at
      */
         .delete('/:chapter_id', (req, res) => {
-            Chapter.destroy(
-              {where : {id : req.params.chapter_id}}
-            )
-            .then(chapter => res.send({ chapter }))
-            .catch(error => res.status(500).send({ error }))
+            Chapter.findById(req.params.chapter_id)
+            .then(chapter => {
+                chapter.destroy()
+                .then(chapter => res.send({ chapter }))
+                .catch(error => res.status(500).send({ error }))
+            }).catch(error => {
+                res.status(404).send({ error })
+            })
         })
 
         /**
@@ -98,16 +101,21 @@ module.exports = function(router){
          * @apiSuccess {String} chapter.description
          */
           .put('/:chapter_id', (req, res) => {
-            Chapter.update(
-              { name : req.body.name,
-                description : req.body.description},
-              { where : {id : req.params.chapter_id} }
-            )
+            Chapter.findById(req.params.chapter_id)
             .then(chapter => {
+                chapter.update(
+                  { name : req.body.name,
+                    description : req.body.description},
+                  { where : {id : req.params.chapter_id} }
+                )
+                .then(chapter => {
                     res.send({ chapter })
                 }).catch(error => {
                     res.status(500).send({ error })
                 })
+            }).catch(error => {
+                res.status(404).send ({ error })
+            })
           })
 
 }

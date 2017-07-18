@@ -88,11 +88,14 @@ module.exports = function(router){
      * @apiSuccess {Date} plugin.created_at
      */
         .delete('/:plugin_id', (req, res) => {
-            Plugin.destroy(
-              {where : {id : req.params.plugin_id}}
-            )
-            .then(plugin => res.send({ plugin }))
-            .catch(error => res.status(500).send({ error }))
+            Plugin.findById(req.params.plugin_id)
+            .then(plugin => {
+                plugin.destroy()
+                .then(plugin => res.send({ plugin }))
+                .catch(error => res.status(500).send({ error }))
+            }).catch(error => {
+                res.status(404).send({ error})
+            })
         })
 
 
@@ -105,12 +108,14 @@ module.exports = function(router){
                 plugin.update({
                   name: req.body.name,
                   description: req.body.description,
+                }).then(plugin => {
+                  plugin.setPluginType(pluginType)
+                  res.send({ plugin })
+                }).catch(error => {
+                  res.status(500).send({ error })
                 })
-                plugin.setPluginType(pluginType)
-                res.send({ plugin })
             }).catch(error => {
-              console.error();
-                res.status(500).send({ error })
+                res.status(404).send({ error })
             })
         })
 
