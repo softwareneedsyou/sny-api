@@ -64,12 +64,13 @@ module.exports = function(router){
                 Story.create({
                     name: req.body.name,
                     description: req.body.description,
+                    compilator: req.body.compilator,
                 }),
                 Chapter.findById(req.body.chapterId)
             ])
-                .then(([story, chapter]) => {
+                .then(([story,chapter]) => {
                     chapter.setStories(story)
-                    res.send({ story })
+                    res.send({ chapter })
                 }).catch(error => {
                     console.log(" "  + error);
                     res.status(500).send({ error })
@@ -93,6 +94,27 @@ module.exports = function(router){
             )
             .then(story => res.send({ story }))
             .catch(error => res.status(500).send({ error }))
+        })
+
+
+
+        .put('/:story_id', (req, res) => {
+            Promise.all([
+                Story.findById(req.params.story_id),
+                Chapter.findById(req.body.chapterId)
+            ])
+            .then(([story,chapter]) => {
+                story.update({
+                  name: req.body.name,
+                  description: req.body.description,
+                  compilator: req.body.compilator,
+                })
+                chapter.setStories(story)
+                res.send({ chapter })
+            }).catch(error => {
+                console.log(" "  + error);
+                res.status(500).send({ error })
+            })
         })
 
 }
