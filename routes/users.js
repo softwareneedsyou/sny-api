@@ -1,5 +1,7 @@
 'use strict'
+const jwt = require('jwt-simple')
 const models  = require('../models')
+const config = require('../config')
 const User    = models.User
 const Chapter = models.Chapter
 const Score   = models.Score
@@ -77,8 +79,13 @@ module.exports = function(router) {
      * @apiError UserAlreadyExists User already exists. Change your email or username.
      */
         .post('/', (req, res) => {
+            const username = req.body.username
+            const password = req.body.password
+            const token = jwt.encode({username, password}, config.jwt.secret)
             User.create({
-                username: req.body.username,
+                username,
+                password,
+                token,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 email: req.body.email,

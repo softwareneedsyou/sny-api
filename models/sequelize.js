@@ -9,9 +9,9 @@ if(process.env.NODE_ENV == 'dev' || !process.env.NODE_ENV){
   user = config.mysql.root
   password = config.mysql.root_password
   if(process.env.NODE_MYSQL_DATABASE == 'docker'){
-    host = config.mysql.dev_url
+    host = config.mysql.docker_url
   } else {
-    host = '127.0.0.1'
+    host = config.mysql.dev_url
   }
 }
 

@@ -18,6 +18,9 @@ module.exports = function(sequelize) {
         password: {
             type: Sequelize.STRING,
         },
+        token: {
+            type: Sequelize.STRING
+        },
         admin: {
             type: Sequelize.BOOLEAN,
         }

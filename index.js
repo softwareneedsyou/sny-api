@@ -18,6 +18,7 @@ app.use(function (req, res, next) {
 
 var routers = {
     ping:        { route: '/ping' },
+    login:       { route: '/login' },
     users:       { route: '/users' },
     plugins:     { route: '/plugins' },
     chapters:    { route: '/chapters' },

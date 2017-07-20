@@ -8,7 +8,7 @@ Once the repo cloned, and considering you have a local database set up properly,
 ```bash
 npm install
 NODE_ENV='dev' npm start # this uses a local MySQL database
-NODE_MYSQL_DATABASE npm start # if you want to use docker. You'll need to follow the instructions below
+NODE_MYSQL_DATABASE='docker' npm start # if you want to use docker. You'll need to follow the instructions below
 ```
 
 ## MySQL
@@ -21,11 +21,7 @@ Docker can be used to host the mysql server. To do so, once docker is installed,
 # first create a dedicated subnet for those containers
 docker network create --subnet=172.21.0.0/16 sny
 # Then download and fire up the MySQL container
-docker run --name sny -e MYSQL_ROOT_PASSWORD='toor' -d mysql:latest
-# You'll need to create the database in order for Sequelize to populate it
-$ mysql -uroot -ptoor -h172.21.0.2
-mysql> CREATE DATABASE sny;
-Query OK, 1 row affected (0.00 sec)
+docker run --name sny -e MYSQL_ROOT_PASSWORD='toor' -e MYSQL_DATABASE -d mysql:latest
 ```
 
 You now have a mysql container running, which resides now on the `172.21.0.2` ip address.
