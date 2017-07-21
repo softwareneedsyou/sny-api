@@ -8,7 +8,7 @@ module.exports = router => {
     .get('/', middlewares.login, (req, res, next) => {
       const username = req.headers.authorization.split(',')[0].split('"')[1]
       User.findOne({
-        attributes: ['token'],
+        attributes: ['token', 'id'],
         where: {
           username
         }
