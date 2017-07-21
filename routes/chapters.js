@@ -16,10 +16,10 @@ module.exports = function(router){
         .get('/', (req, res, next) => {
             Chapter.findAll()
                 .then(chapters => {
-                    res.send({ chapters })
+                    res.send(chapters)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -35,10 +35,10 @@ module.exports = function(router){
         .get('/:chapter_id', (req, res, next) => {
             Chapter.findById(req.params.chapter_id)
                 .then(chapter => {
-                    res.send({ chapter })
+                    res.send(chapter)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -62,9 +62,9 @@ module.exports = function(router){
                 description: req.body.description,
             })
                 .then(chapter => {
-                    res.send({ chapter })
+                    res.send(chapter)
                 }).catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -83,10 +83,10 @@ module.exports = function(router){
             Chapter.findById(req.params.chapter_id)
             .then(chapter => {
                 chapter.destroy()
-                .then(chapter => res.send({ chapter }))
-                .catch(error => res.status(500).send({ error }))
+                .then(chapter => res.send(chapter))
+                .catch(error => res.status(500).send(error))
             }).catch(error => {
-                res.status(404).send({ error })
+                res.status(404).send(error)
             })
         })
 
@@ -109,13 +109,12 @@ module.exports = function(router){
                   { where : {id : req.params.chapter_id} }
                 )
                 .then(chapter => {
-                    res.send({ chapter })
+                    res.send(chapter)
                 }).catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
             }).catch(error => {
-                res.status(404).send ({ error })
+                res.status(404).send (error)
             })
           })
-
 }

@@ -22,12 +22,16 @@ module.exports = function(router) {
      * @apiSuccess {Date} users.createdAt
      */
         .get('/', (req, res) => {
-            User.findAll()
+            User.findAll({
+                attributes: {
+                    exclude: ['password', 'token']
+                }
+            })
                 .then(users  => {
-                    res.send({ users })
+                    res.send(users)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -48,12 +52,16 @@ module.exports = function(router) {
      * @apiSuccess {Date} user.updatedAt
      */
         .get('/:user_id', (req, res) => {
-            User.findById(req.params.user_id)
+            User.findById(req.params.user_id, {
+                attributes: {
+                    exclude: ['password', 'token']
+                }
+            })
                 .then((user) => {
-                    res.send({ user })
+                    res.send(user)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -91,10 +99,10 @@ module.exports = function(router) {
                 email: req.body.email,
                 admin: req.body.admin,
             }).then(user => {
-                res.send({ user })
+                res.send(user)
             })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -126,11 +134,10 @@ module.exports = function(router) {
             ])
                 .then(([user, chapter]) => {
                     user.addChapter(chapter, { through: { score: req.body.score } })
-                    res.send({ user })
+                    res.send(user)
                 })
                 .catch(error => {
-                    console.log({ error })
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -154,10 +161,10 @@ module.exports = function(router) {
             User.findById(req.params.user_id)
             .then(user => {
                 user.destroy()
-                .then(user => res.send({ user }))
-                .catch(error => res.status(500).send({ error }))
+                .then(user => res.send(user))
+                .catch(error => res.status(500).send(error))
             }).catch(error => {
-                res.status(404).send({ error })
+                res.status(404).send(error)
             })
         })
 
@@ -188,12 +195,12 @@ module.exports = function(router) {
                   { where : {id : req.params.user_id} }
                 )
                 .then(user => {
-                    res.send({ user })
+                    res.send(user)
                 }).catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
             }).catch(error => {
-                res.status(404).send({ error })
+                res.status(404).send(error)
             })
         })
 }

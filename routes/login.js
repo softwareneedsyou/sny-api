@@ -17,7 +17,7 @@ module.exports = router => {
           res.send(token)
         })
         .catch(error => {
-          res.status(500).send({ error })
+          res.status(500).send(error)
         })
     })
 }

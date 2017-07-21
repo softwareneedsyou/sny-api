@@ -18,10 +18,10 @@ module.exports = function(router){
         .get('/', (req, res, next) => {
             Plugin.findAll()
                 .then(plugins => {
-                    res.send({ plugins })
+                    res.send(plugins)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -37,10 +37,10 @@ module.exports = function(router){
         .get('/:plugin_id', (req, res, next) => {
             Plugin.findById(req.params.plugin_id)
                 .then(plugin => {
-                    res.send({ plugin })
+                    res.send(plugin)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -69,10 +69,10 @@ module.exports = function(router){
             ])
                 .then(([plugin, pluginType]) => {
                     plugin.setPluginType(pluginType)
-                    res.send({ plugin })
+                    res.send(plugin)
                 }).catch(error => {
                   console.error();
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -91,10 +91,10 @@ module.exports = function(router){
             Plugin.findById(req.params.plugin_id)
             .then(plugin => {
                 plugin.destroy()
-                .then(plugin => res.send({ plugin }))
-                .catch(error => res.status(500).send({ error }))
+                .then(plugin => res.send(plugin))
+                .catch(error => res.status(500).send(error))
             }).catch(error => {
-                res.status(404).send({ error})
+                res.status(404).send(error)
             })
         })
 
@@ -110,12 +110,12 @@ module.exports = function(router){
                   description: req.body.description,
                 }).then(plugin => {
                   plugin.setPluginType(pluginType)
-                  res.send({ plugin })
+                  res.send(plugin)
                 }).catch(error => {
-                  res.status(500).send({ error })
+                  res.status(500).send(error)
                 })
             }).catch(error => {
-                res.status(404).send({ error })
+                res.status(404).send(error)
             })
         })
 

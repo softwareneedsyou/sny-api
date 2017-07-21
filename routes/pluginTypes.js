@@ -17,10 +17,10 @@ module.exports = function(router){
         .get('/', (req, res, next) => {
             pluginType.findAll()
                 .then(pluginTypes => {
-                    res.send({ pluginTypes })
+                    res.send(pluginTypes)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -36,10 +36,10 @@ module.exports = function(router){
         .get('/:pluginType_id', (req, res, next) => {
             pluginType.findById(req.params.pluginType_id)
                 .then(pluginType => {
-                    res.send({ pluginType })
+                    res.send(pluginType)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -63,9 +63,9 @@ module.exports = function(router){
                 description: req.body.description,
             })
                 .then(pluginType => {
-                    res.send({ pluginType })
+                    res.send(pluginType)
                 }).catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -82,43 +82,40 @@ module.exports = function(router){
      */
         .delete('/:pluginType_id', (req, res) => {
             PluginType.findById(req.params.pluginType_id)
-            .then(pluginType => {
-                pluginType.destroy()
-                .then(pluginType => res.send({ pluginType }))
-                .catch(error => res.status(500).send({ error }))
-            }).catch(error => {
-                res.status(404).send({ error })
-            })
+                .then(pluginType => {
+                    pluginType.destroy()
+                        .then(pluginType => res.send(pluginType))
+                        .catch(error => res.status(500).send(error))
+                }).catch(error => {
+                    res.status(404).send(error)
+                })
         })
 
-
-      /**
-       * @api {put} /user/:user_id DeleteUser
-       * @apiGroup Users
-       *
-       * @apiParam {number} user_id
-       *
-       * @apiSuccess {Object} chapter
-       * @apiSuccess {String} chapter.name
-       * @apiSuccess {String} chapter.description
-       */
-          .put('/:pluginType_id', (req, res) => {
+    /**
+     * @api {put} /user/:user_id DeleteUser
+     * @apiGroup Users
+     *
+     * @apiParam {number} user_id
+     *
+     * @apiSuccess {Object} chapter
+     * @apiSuccess {String} chapter.name
+     * @apiSuccess {String} chapter.description
+     */
+        .put('/:pluginType_id', (req, res) => {
             PluginType.findById(res.params.pluginType)
-            .then(pluginType => {
-                pluginType.update(
-                  { name : req.body.name,
-                    description : req.body.description},
-                  { where : {id : req.params.pluginType_id} }
-                )
-                .then(chapter => {
-                    res.send({ chapter })
+                .then(pluginType => {
+                    pluginType.update(
+                        { name : req.body.name,
+                            description : req.body.description},
+                        { where : {id : req.params.pluginType_id} }
+                    )
+                        .then(chapter => {
+                            res.send(chapter)
+                        }).catch(error => {
+                            res.status(500).send(error)
+                        })
                 }).catch(error => {
-                    res.status(500).send({ error })
+                    res.status(404).send(error)
                 })
-            }).catch(error => {
-                res.status(404).send({ error })
-            })
-
-          })
-
+        })
 }

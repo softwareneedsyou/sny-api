@@ -18,10 +18,10 @@ module.exports = function(router){
         .get('/', (req, res, next) => {
             Story.findAll()
                 .then(stories => {
-                    res.send({ stories })
+                    res.send(stories)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -37,10 +37,10 @@ module.exports = function(router){
         .get('/:story_id', (req, res, next) => {
             Story.findById(req.params.story_id)
                 .then(story => {
-                    res.send({ story })
+                    res.send(story)
                 })
                 .catch(error => {
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -70,10 +70,10 @@ module.exports = function(router){
             ])
                 .then(([story,chapter]) => {
                     chapter.setStories(story)
-                    res.send({ chapter })
+                    res.send(chapter)
                 }).catch(error => {
                     console.log(" "  + error);
-                    res.status(500).send({ error })
+                    res.status(500).send(error)
                 })
         })
 
@@ -92,10 +92,10 @@ module.exports = function(router){
           Story.findById(req.params.story_id)
           .then(story => {
               story.destroy()
-              .then(story => res.send({ story }))
-              .catch(error => res.status(500).send({ error }))
+              .then(story => res.send(story))
+              .catch(error => res.status(500).send(error))
           }).catch(error => {
-              res.status(404).send({ error })
+              res.status(404).send(error)
           })
         })
 
@@ -123,13 +123,12 @@ module.exports = function(router){
                   compilator: req.body.compilator,
                 }).then(story => {
                   chapter.setStories(story)
-                  res.send({ chapter })
+                  res.send(chapter)
                 }).catch(error => {
-                  res.status(500).send({ error })
+                  res.status(500).send(error)
                 })
             }).catch(error => {
-                res.status(404).send({ error })
+                res.status(404).send(error)
             })
         })
-
 }
