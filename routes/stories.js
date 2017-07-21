@@ -68,11 +68,10 @@ module.exports = function(router){
                 }),
                 Chapter.findById(req.body.chapterId)
             ])
-                .then(([story,chapter]) => {
+                .then(([story, chapter]) => {
                     chapter.setStories(story)
                     res.send(chapter)
                 }).catch(error => {
-                    console.log(" "  + error);
                     res.status(500).send(error)
                 })
         })

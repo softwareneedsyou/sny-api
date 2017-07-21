@@ -21,7 +21,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         compilator: {
             type: Sequelize.INTEGER,
-            allowNull: false,
             validate: {
                 notEmpty: true,
                 isNumeric: true,

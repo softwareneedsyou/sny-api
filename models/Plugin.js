@@ -8,7 +8,6 @@ module.exports = function(sequelize) {
             allowNull: false,
             validate: {
               notEmpty: true,
-              len: [3,20],
             },
         },
         description: {
@@ -16,7 +15,6 @@ module.exports = function(sequelize) {
             allowNull: false,
             validate: {
               notEmpty: true,
-              len: [3,255],
             },
         }
     })
