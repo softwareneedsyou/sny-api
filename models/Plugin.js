@@ -16,6 +16,10 @@ module.exports = function(sequelize) {
             validate: {
               notEmpty: true,
             },
+        },
+        data: {
+          type: Sequelize.BLOB,
+          allowNull: false,
         }
     })
 }

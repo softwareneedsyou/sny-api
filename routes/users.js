@@ -1,4 +1,5 @@
 'use strict'
+const random128Hex = require('../core/random128').random128Hex
 const jwt = require('jwt-simple')
 const models  = require('../models')
 const config = require('../config')
@@ -87,9 +88,10 @@ module.exports = function(router) {
      * @apiError UserAlreadyExists User already exists. Change your email or username.
      */
         .post('/', (req, res) => {
+            console.log("First " + req.body.firstname);
             const username = req.body.username
             const password = req.body.password
-            const token = jwt.encode({username, password}, config.jwt.secret)
+            const token = jwt.encode({username, password}, random128Hex())
             User.create({
                 username,
                 password,
@@ -98,6 +100,7 @@ module.exports = function(router) {
                 lastname: req.body.lastname,
                 email: req.body.email,
                 admin: req.body.admin,
+                picture: req.body.picture,
             }).then(user => {
                 res.send(user)
             })

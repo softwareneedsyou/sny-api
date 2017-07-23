@@ -28,5 +28,9 @@ module.exports = function(sequelize, DataTypes) {
                 min: 1,
             },
         },
+        data: {
+            type: Sequelize.BLOB,
+            allowNull: false,
+        }
     })
 }

@@ -59,6 +59,9 @@ module.exports = function(sequelize) {
                 min: 0,
                 max : 1,
             },
+        },
+        picture: {
+            type: Sequelize.BLOB,
         }
     })
 }
