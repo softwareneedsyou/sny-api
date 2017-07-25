@@ -3,7 +3,29 @@ const models     = require('../models');
 const Plugin     = models.Plugin
 const PluginType = models.PluginType
 
+//File Dowload
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
+
+//File Upload
+const multer  = require('multer')
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploadsPlugin")
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
+var upload = multer({storage})
+
 module.exports = function(router){
+
+
+
     router
     /**
      * @api {get} /plugins/ GetPlugins
@@ -24,6 +46,34 @@ module.exports = function(router){
                     res.status(500).send(error)
                 })
         })
+
+
+    /**
+     * @api {get} /plugin/plugin_id/plugin GetPluginFile
+     * @apiGroup Plugin
+     *
+     * @apiSuccess {file} plugin_name.jpg
+     */
+      .get('/:plugin_id/plugin', function(req, res){
+        Plugin.findById(req.params.plugin_id)
+        .then(plugin => {
+          var file = "uploadsPlugin/" + plugin.name + ".zip";
+          var filename = path.basename(file);
+          var mimetype = mime.lookup(file);
+
+          res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+          res.setHeader('Content-type', mimetype);
+
+          var filestream = fs.createReadStream(file);
+          filestream.pipe(res);
+        }).catch(error => {
+          res.status(404).send(error)
+        })
+      })
+
+
+
+
 
     /**
      * @api {get} /plugins/:plugin_id GetPlugin
@@ -59,11 +109,12 @@ module.exports = function(router){
      *
      * @apiError PluginAlreadyExists
      */
-        .post('/', (req, res, next) => {
+        .post('/', upload.single('plugin'), (req, res, next) => {
             Promise.all([
                 Plugin.create({
                     name: req.body.name,
                     description: req.body.description,
+                    url: '/uploadsPlugin/' + req.body.name + ".zip",
                 }),
                 PluginType.findById(req.body.pluginTypeId)
             ])
@@ -71,7 +122,6 @@ module.exports = function(router){
                     plugin.setPluginType(pluginType)
                     res.send(plugin)
                 }).catch(error => {
-                  console.error();
                     res.status(500).send(error)
                 })
         })

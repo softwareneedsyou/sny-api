@@ -61,7 +61,7 @@ module.exports = function(sequelize) {
             },
         },
         picture: {
-            type: Sequelize.BLOB,
+            type: Sequelize.STRING,
         }
     })
 }

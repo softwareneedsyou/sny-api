@@ -1,6 +1,7 @@
 'use strict'
 const passport = require('passport')
 const DigestStrategy = require('passport-http').DigestStrategy
+const BasicStrategy = require('passport-http').BasicStrategy
 const models = require('../models')
 const User = models.User
 
@@ -39,6 +40,38 @@ passport.use(new DigestStrategy({ qop: 'auth' }, (username, done) => {
     })
 )
 
-const login = passport.authenticate('digest', { session: false })
 
-module.exports = login
+passport.use(new BasicStrategy( (username, password, done) => {
+  User.findOne({
+      where: {
+          username
+      }
+  }).then(user => {
+      if(user){
+        console.log("-" + user.password + "-" + password + "-")
+        if(user.password == password){
+          console.log("Mid : ")
+          console.log(user.firstname)
+          return done(null, user)
+        } else {
+          return done(null, false)
+        }
+      } else {
+          return done(null, false)
+      }
+  }).catch(error => {
+      return done(error)
+  })
+},
+  (params, done) => {
+      done(null, true)
+  })
+)
+
+const login = passport.authenticate('digest', { session: false })
+const basicLogin = passport.authenticate('basic', { session: false })
+
+module.exports = {
+  login,
+  basicLogin,
+}

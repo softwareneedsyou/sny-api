@@ -7,6 +7,25 @@ const User    = models.User
 const Chapter = models.Chapter
 const Score   = models.Score
 
+//File Download
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
+
+//File Upload
+const multer  = require('multer')
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploadsUser")
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
+var upload = multer({storage})
+
 module.exports = function(router) {
     router
     /**
@@ -35,6 +54,30 @@ module.exports = function(router) {
                     res.status(500).send(error)
                 })
         })
+
+
+    /**
+     * @api {get} /user/user_id/picture GetUserPicture
+     * @apiGroup Users
+     *
+     * @apiSuccess {file} username.jpg
+     */
+      .get('/:user_id/picture', function(req, res){
+        User.findById(req.params.user_id)
+        .then(user => {
+          var file = "uploadsUser/" + user.username + ".jpg";
+          var filename = path.basename(file);
+          var mimetype = mime.lookup(file);
+
+          res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+          res.setHeader('Content-type', mimetype);
+
+          var filestream = fs.createReadStream(file);
+          filestream.pipe(res);
+        }).catch(error => {
+          res.status(404).send(error)
+        })
+      })
 
     /**
      * @api {get} /user/:user_id GetUser
@@ -87,8 +130,8 @@ module.exports = function(router) {
      *
      * @apiError UserAlreadyExists User already exists. Change your email or username.
      */
-        .post('/', (req, res) => {
-            console.log("First " + req.body.firstname);
+
+        .post('/', upload.single('avatar'), (req, res) => {
             const username = req.body.username
             const password = req.body.password
             const token = jwt.encode({username, password}, random128Hex())
@@ -100,14 +143,16 @@ module.exports = function(router) {
                 lastname: req.body.lastname,
                 email: req.body.email,
                 admin: req.body.admin,
-                picture: req.body.picture,
-            }).then(user => {
+                picture: '/uploadsUser/' + req.body.username + ".jpg",
+            }
+          ).then(user => {
                 res.send(user)
             })
                 .catch(error => {
                     res.status(500).send(error)
                 })
         })
+
 
     /**
      * @api {post} /users/:user_id/chapters/:chapter_id

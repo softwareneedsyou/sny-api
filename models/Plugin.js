@@ -17,8 +17,8 @@ module.exports = function(sequelize) {
               notEmpty: true,
             },
         },
-        data: {
-          type: Sequelize.BLOB,
+        url: {
+          type: Sequelize.STRING,
           allowNull: false,
         }
     })
