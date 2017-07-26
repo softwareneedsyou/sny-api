@@ -2,6 +2,25 @@
 const models = require('../models');
 const Chapter = models.Chapter
 
+//File Dowload
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
+
+//File Upload
+const multer  = require('multer')
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploadsChapter")
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
+var upload = multer({storage})
+
 module.exports = function(router){
     router
     /**
@@ -22,6 +41,30 @@ module.exports = function(router){
                     res.status(500).send(error)
                 })
         })
+
+
+    /**
+     * @api {get} /plugin/plugin_id/plugin GetPluginFile
+     * @apiGroup Plugin
+     *
+     * @apiSuccess {file} plugin_name.jpg
+     */
+      .get('/:chapter_id/chapter', function(req, res){
+        Chapter.findById(req.params.chapter_id)
+        .then(chapter => {
+          var file = "uploadsChapter/" + chapter.name + ".jar";
+          var filename = path.basename(file);
+          var mimetype = mime.lookup(file);
+
+          res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+          res.setHeader('Content-type', mimetype);
+
+          var filestream = fs.createReadStream(file);
+          filestream.pipe(res);
+        }).catch(error => {
+          res.status(404).send(error)
+        })
+      })
 
     /**
      * @api {get} /chapters/:chapter_id GetChapter
@@ -56,10 +99,11 @@ module.exports = function(router){
      *
      * @apiError ChapterAlreadyExists
      */
-        .post('/', (req, res, next) => {
+        .post('/', upload.single('chapter'), (req, res, next) => {
             Chapter.create({
                 name: req.body.name,
                 description: req.body.description,
+                url: '/uploadsChapter/' + req.body.name + ".jar"
             })
                 .then(chapter => {
                     res.send(chapter)

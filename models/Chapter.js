@@ -16,6 +16,10 @@ module.exports = function(sequelize) {
             validate: {
               notEmpty: true,
             },
+        },
+        url: {
+            type: Sequelize.STRING,
+            allowNull: false,
         }
     })
 }
